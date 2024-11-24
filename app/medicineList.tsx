@@ -13,8 +13,7 @@ export default function MedicineList() {
 
 	const renderMedicineItem = ({ item }: { item: Medicine }) => (
 		<MedicineCard
-			name={item.name}
-			amount={item.amount}
+			medicineDetails = {item}
 			onPress={() => router.push(`/medicineDetail?id=${item.id}`)} // Correct query param
 			onDelete={() => removeMedicine(item.id)} // Handle removal
 		/>

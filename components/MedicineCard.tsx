@@ -1,20 +1,31 @@
+import { Medicine } from "@/types/medicine";
+import dayjs from "dayjs";
 import { StyleSheet } from "react-native";
 import { Button, Card, useTheme } from "react-native-paper";
+import { Text } from "react-native";
 
 interface MedicineCardProps {
-	name: string;
-	amount: number;
+	medicineDetails: Medicine;
 	onPress: () => void;
 	onDelete: () => void;
 }
 
 const MedicineCard = ({
-	name,
-	amount,
+	medicineDetails,
 	onPress,
 	onDelete,
 }: MedicineCardProps) => {
+	const { name, amount, dosage, creationDate, expiryDate, stockThreshold } =
+		medicineDetails;
+
 	const theme = useTheme();
+	const daysElapsed = creationDate
+		? dayjs().diff(dayjs(creationDate), "day")
+		: 0;
+	const expectedStock = amount - daysElapsed * dosage;
+	const isBelowThreshold =
+		stockThreshold != null && expectedStock <= stockThreshold;
+
 	return (
 		<Card
 			style={[
@@ -28,8 +39,19 @@ const MedicineCard = ({
 		>
 			<Card.Title
 				title={name}
-				subtitle={amount}
+				subtitle={`Stock: ${expectedStock}`}
 			/>
+			<Card.Content>
+				<Text style={{ color: theme.colors.onSurface }}>
+					Dosage: {dosage} per day
+				</Text>
+				{isBelowThreshold && (
+					<Text style={{ color: theme.colors.error }}>
+						Warning: Stock below threshold!
+					</Text>
+				)}
+			</Card.Content>
+
 			<Card.Actions>
 				<Button onPress={onPress}>View Details</Button>
 				<Button

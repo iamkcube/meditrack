@@ -4,6 +4,8 @@ import { PaperProvider, DefaultTheme, MD3DarkTheme } from "react-native-paper";
 import { Slot } from "expo-router";
 import { StatusBar, useColorScheme } from "react-native";
 import { MedicineProvider } from "@/context/MedicineContext";
+import { en, registerTranslation } from "react-native-paper-dates";
+registerTranslation("en", en);
 
 export default function Layout() {
 	const [isDarkMode, setIsDarkMode] = useState(false);

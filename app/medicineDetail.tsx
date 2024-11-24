@@ -5,6 +5,8 @@ import { useRouter } from "expo-router";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useMedicineContext } from "@/context/MedicineContext";
 import { Medicine } from "@/types/medicine";
+import dayjs from "dayjs";
+import { formatDateWithOrdinal } from "@/utils/formatDateWithOrdinal";
 
 export default function MedicineDetail() {
 	const router = useRouter();
@@ -74,7 +76,8 @@ export default function MedicineDetail() {
 				<Card.Content>
 					{medicine.expiryDate && (
 						<Text style={{ color: theme.colors.onBackground }}>
-							Expiry Date: {medicine.expiryDate}
+							Expiry Date:{" "}
+							{formatDateWithOrdinal(medicine.expiryDate)}
 						</Text>
 					)}
 					{medicine.stockThreshold && (

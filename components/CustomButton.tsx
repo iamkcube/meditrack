@@ -1,6 +1,6 @@
 import React from "react";
+import { StyleSheet, View } from "react-native";
 import { Button, useTheme } from "react-native-paper";
-import { StyleSheet, View, Text } from "react-native";
 
 interface CustomButtonProps {
 	title: string;

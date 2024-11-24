@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
 import { Medicine } from "@/types/medicine";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import dayjs from "dayjs";
 import * as Notifications from "expo-notifications"; // Import for notifications
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 
 // Define the MedicineContext
 interface MedicineContextProps {
@@ -71,10 +71,10 @@ export const MedicineProvider = ({
 	};
 
 	// Function to check stock and send notifications
-	const checkStockLevels = () => {
+	const checkStockLevels = useCallback(() => {
 		medicines.forEach((medicine) => {
 			const remainingStock = calculateRemainingStock(medicine);
-
+	
 			if (
 				medicine.stockThreshold !== undefined &&
 				remainingStock <= medicine.stockThreshold
@@ -82,7 +82,7 @@ export const MedicineProvider = ({
 				sendNotification(medicine.name, remainingStock);
 			}
 		});
-	};
+	}, [medicines]);
 
 	// Function to send notifications
 	const sendNotification = async (
@@ -100,10 +100,12 @@ export const MedicineProvider = ({
 
 	// Periodic stock check
 	useEffect(() => {
-		const interval = setInterval(checkStockLevels, 24 * 60 * 60 * 1000); // Check every day
-
+		const interval = setInterval(() => {
+			checkStockLevels();
+		}, 24 * 60 * 60 * 1000); // Check every day
+	
 		return () => clearInterval(interval);
-	}, [medicines]);
+	}, [checkStockLevels]);
 
 	// Add a new medicine
 	const addMedicine = (medicine: Medicine) => {

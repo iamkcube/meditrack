@@ -5,13 +5,14 @@ import { useRouter } from "expo-router";
 import { useSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import {
-	Button,
-	HelperText,
-	Text,
-	TextInput,
-	useTheme,
-} from "react-native-paper";
+import
+	{
+		Button,
+		HelperText,
+		Text,
+		TextInput,
+		useTheme,
+	} from "react-native-paper";
 
 export default function RestockMedicine() {
 	const router = useRouter();
@@ -72,7 +73,7 @@ export default function RestockMedicine() {
 					/>
 					<HelperText
 						type="error"
-						visible={amount == null || amount == undefined}
+						visible={amount === null || amount === undefined}
 					>
 						Amount is required.
 					</HelperText>

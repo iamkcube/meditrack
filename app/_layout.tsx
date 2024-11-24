@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { PaperProvider, DefaultTheme, MD3DarkTheme } from "react-native-paper";
 import { Slot } from "expo-router";
+import { PaperProvider } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 // import * as SplashScreen from "expo-splash-screen";
-import { StatusBar, useColorScheme } from "react-native";
 import { MedicineProvider } from "@/context/MedicineContext";
-import { en, registerTranslation } from "react-native-paper-dates";
 import { darkTheme, lightTheme } from "@/theme/theme";
-import { useFonts } from "expo-font";
+import { StatusBar, useColorScheme } from "react-native";
+import { en, registerTranslation } from "react-native-paper-dates";
+// import { useFonts } from "expo-font";
 registerTranslation("en", en);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

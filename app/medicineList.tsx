@@ -1,13 +1,12 @@
-import React from "react";
-import { View, FlatList, StyleSheet } from "react-native";
-import { Text, useTheme } from "react-native-paper";
-import { useRouter } from "expo-router";
 import MedicineCard from "@/components/MedicineCard";
-import { Medicine } from "@/types/medicine";
 import { useMedicineContext } from "@/context/MedicineContext";
+import { Medicine } from "@/types/medicine";
+import { useRouter } from "expo-router";
+import { FlatList, StyleSheet, View } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 
 export default function MedicineList() {
-	const { medicines, removeMedicine } = useMedicineContext();
+	const { medicines } = useMedicineContext();
 	const router = useRouter();
 	const theme = useTheme();
 

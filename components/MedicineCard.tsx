@@ -1,10 +1,8 @@
 import { Medicine } from "@/types/medicine";
 import { expectedStockCalculator } from "@/utils/expectedStockCalculator";
 import { formatDateWithOrdinal } from "@/utils/formatDateWithOrdinal";
-import dayjs from "dayjs";
-import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { Button, Card, useTheme, Text, Chip } from "react-native-paper";
+import { Button, Card, Chip, Text, useTheme } from "react-native-paper";
 
 interface MedicineCardProps {
 	medicineDetails: Medicine;
@@ -17,7 +15,7 @@ const MedicineCard = ({
 	onRestock,
 	onPress,
 }: MedicineCardProps) => {
-	const { name, amount, dosage, creationDate, expiryDate, stockThreshold } =
+	const { name, amount, dosage, creationDate, stockThreshold } =
 		medicineDetails;
 
 	const theme = useTheme();

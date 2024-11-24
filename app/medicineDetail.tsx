@@ -5,16 +5,15 @@ import { formatDateWithOrdinal } from "@/utils/formatDateWithOrdinal";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
 import { useSearchParams } from "expo-router/build/hooks";
-import { useEffect, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
-import {
-	Button,
-	Card,
-	useTheme,
-	Text,
-	Divider,
-	Chip,
-} from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import
+	{
+		Button,
+		Chip,
+		Divider,
+		Text,
+		useTheme
+	} from "react-native-paper";
 
 export default function MedicineDetail() {
 	const router = useRouter();

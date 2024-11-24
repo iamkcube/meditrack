@@ -1,8 +1,8 @@
 import { Medicine } from "@/types/medicine";
 import dayjs from "dayjs";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, HelperText, TextInput, useTheme } from "react-native-paper";
+import { Button, HelperText, TextInput } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
 import { SingleChange } from "react-native-paper-dates/lib/typescript/Date/Calendar";
 
@@ -12,7 +12,6 @@ interface Props {
 }
 
 export default function MedicineForm({ onSubmit, defaultValues }: Props) {
-	const theme = useTheme();
 
 	const [name, setName] = useState(defaultValues?.name || "");
 	const [amount, setAmount] = useState<number | null>(
@@ -93,7 +92,7 @@ export default function MedicineForm({ onSubmit, defaultValues }: Props) {
 				/>
 				<HelperText
 					type="error"
-					visible={name == null || name == undefined}
+					visible={name === null || name === undefined}
 				>
 					Medicine name is required.
 				</HelperText>

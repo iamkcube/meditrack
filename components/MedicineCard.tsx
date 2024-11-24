@@ -1,17 +1,30 @@
 import { Medicine } from "@/types/medicine";
 import { formatDateWithOrdinal } from "@/utils/formatDateWithOrdinal";
 import dayjs from "dayjs";
+import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { Button, Card, useTheme, Text, Chip } from "react-native-paper";
 
 interface MedicineCardProps {
 	medicineDetails: Medicine;
+	onUpdate: () => void;
 	onPress: () => void;
 }
 
-const MedicineCard = ({ medicineDetails, onPress }: MedicineCardProps) => {
-	const { name, amount, dosage, creationDate, expiryDate, stockThreshold } =
-		medicineDetails;
+const MedicineCard = ({
+	medicineDetails,
+	onUpdate,
+	onPress,
+}: MedicineCardProps) => {
+	const {
+		id,
+		name,
+		amount,
+		dosage,
+		creationDate,
+		expiryDate,
+		stockThreshold,
+	} = medicineDetails;
 
 	const theme = useTheme();
 	const daysElapsed = creationDate
@@ -67,6 +80,7 @@ const MedicineCard = ({ medicineDetails, onPress }: MedicineCardProps) => {
 			</Card.Content>
 
 			<Card.Actions>
+				<Button onPress={onUpdate}>Update</Button>
 				<Button onPress={onPress}>View Details</Button>
 			</Card.Actions>
 		</Card>

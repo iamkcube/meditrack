@@ -13,7 +13,8 @@ export default function MedicineList() {
 
 	const renderMedicineItem = ({ item }: { item: Medicine }) => (
 		<MedicineCard
-			medicineDetails = {item}
+			medicineDetails={item}
+			onUpdate={() => router.push(`/updateMedicine?id=${item.id}`)}
 			onPress={() => router.push(`/medicineDetail?id=${item.id}`)} // Correct query param
 		/>
 	);

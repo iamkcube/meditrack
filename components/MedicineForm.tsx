@@ -1,6 +1,6 @@
 import { Medicine } from "@/types/medicine";
 import dayjs from "dayjs";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, HelperText, TextInput, useTheme } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
@@ -8,17 +8,26 @@ import { SingleChange } from "react-native-paper-dates/lib/typescript/Date/Calen
 
 interface Props {
 	onSubmit: (medicine: Medicine) => void;
+	defaultValues?: Partial<Medicine>;
 }
 
-export default function MedicineForm({ onSubmit }: Props) {
+export default function MedicineForm({ onSubmit, defaultValues }: Props) {
 	const theme = useTheme();
 
-	const [name, setName] = useState("");
-	const [amount, setAmount] = useState<number | null>(null);
-	const [dosage, setDosage] = useState<number>(1);
-	const [creationDate, setCreationDate] = useState<string | null>(null);
-	const [expiryDate, setExpiryDate] = useState<string | null>(null);
-	const [stockThreshold, setStockThreshold] = useState<number | null>(null);
+	const [name, setName] = useState(defaultValues?.name || "");
+	const [amount, setAmount] = useState<number | null>(
+		defaultValues?.amount || null
+	);
+	const [dosage, setDosage] = useState<number>(defaultValues?.dosage || 1);
+	const [creationDate, setCreationDate] = useState<string | null>(
+		defaultValues?.creationDate || null
+	);
+	const [expiryDate, setExpiryDate] = useState<string | null>(
+		defaultValues?.expiryDate || null
+	);
+	const [stockThreshold, setStockThreshold] = useState<number | null>(
+		defaultValues?.stockThreshold || null
+	);
 	const [creationDatePickerVisible, setCreationDatePickerVisible] =
 		useState(false);
 	const [expiryDatePickerVisible, setExpiryDatePickerVisible] =
@@ -31,12 +40,13 @@ export default function MedicineForm({ onSubmit }: Props) {
 		}
 
 		const newMedicine: Medicine = {
-			id: Date.now(), 
+			id: defaultValues?.id || Date.now(), // Keep ID if editing
 			name,
 			amount,
 			dosage,
 			stockThreshold: stockThreshold || undefined,
 			creationDate: creationDate || dayjs().toISOString(),
+			updatedDate: dayjs().toISOString(),
 			expiryDate: expiryDate || undefined,
 		};
 
@@ -73,109 +83,117 @@ export default function MedicineForm({ onSubmit }: Props) {
 
 	return (
 		<View style={styles.container}>
-			<TextInput
-				label="Medicine Name"
-				value={name}
-				onChangeText={setName}
-				style={styles.input}
-				mode="outlined"
-			/>
-			<HelperText
-				type="error"
-				visible={name == null || name == undefined}
-			>
-				Medicine name is required.
-			</HelperText>
+			<View>
+				<TextInput
+					label="Medicine Name"
+					value={name}
+					onChangeText={setName}
+					style={styles.input}
+					mode="outlined"
+				/>
+				<HelperText
+					type="error"
+					visible={name == null || name == undefined}
+				>
+					Medicine name is required.
+				</HelperText>
+				<TextInput
+					label="Amount in Stock"
+					value={amount !== null ? amount.toString() : ""}
+					onChangeText={(text) => setAmount(Number(text))}
+					keyboardType="numeric"
+					style={styles.input}
+					mode="outlined"
+				/>
+				<HelperText
+					type="error"
+					visible={amount === null}
+				>
+					Amount is required.
+				</HelperText>
+				<TextInput
+					label="Dosage"
+					value={dosage.toString()}
+					onChangeText={(text) => setDosage(Number(text))}
+					keyboardType="numeric"
+					style={styles.input}
+					mode="outlined"
+				/>
+				<HelperText
+					type="error"
+					visible={dosage === null}
+				>
+					Dosage is required.
+				</HelperText>
+				<TextInput
+					label="Creation Date (Optional)"
+					value={
+						creationDate
+							? dayjs(creationDate).format("DD-MM-YYYY")
+							: ""
+					}
+					onFocus={() => setCreationDatePickerVisible(true)} // Open date picker
+					style={styles.input}
+					mode="outlined"
+				/>
+				<DatePickerModal
+					locale="en"
+					mode="single"
+					visible={creationDatePickerVisible}
+					onDismiss={onDismissCreationDate}
+					date={creationDate ? new Date(creationDate) : new Date()}
+					onConfirm={onConfirmCreationDate}
+					animationType="fade"
+				/>
+				<TextInput
+					label="Expiry Date (Optional)"
+					value={
+						expiryDate ? dayjs(expiryDate).format("DD-MM-YYYY") : ""
+					}
+					onFocus={() => setExpiryDatePickerVisible(true)} // Open date picker
+					style={styles.input}
+					mode="outlined"
+				/>
+				<DatePickerModal
+					locale="en"
+					mode="single"
+					visible={expiryDatePickerVisible}
+					onDismiss={onDismissExpiryDate}
+					date={expiryDate ? new Date(expiryDate) : new Date()}
+					onConfirm={onConfirmExpiryDate}
+					animationType="fade"
+				/>
+				<TextInput
+					label="Low Stock Threshold (Optional)"
+					value={
+						stockThreshold !== null ? stockThreshold.toString() : ""
+					}
+					onChangeText={(text) => setStockThreshold(Number(text))}
+					keyboardType="numeric"
+					style={styles.input}
+					mode="outlined"
+				/>
+			</View>
 
-			<TextInput
-				label="Amount in Stock"
-				value={amount !== null ? amount.toString() : ""}
-				onChangeText={(text) => setAmount(Number(text))}
-				keyboardType="numeric"
-				style={styles.input}
-				mode="outlined"
-			/>
-			<HelperText
-				type="error"
-				visible={amount == null}
-			>
-				Amount is required.
-			</HelperText>
-
-			<TextInput
-				label="Dosage"
-				value={dosage.toString()}
-				onChangeText={(text) => setDosage(Number(text))}
-				keyboardType="numeric"
-				style={styles.input}
-				mode="outlined"
-			/>
-			<HelperText
-				type="error"
-				visible={dosage == null}
-			>
-				Dosage is required.
-			</HelperText>
-
-			<TextInput
-				label="Creation Date (Optional)"
-				value={
-					creationDate ? dayjs(creationDate).format("DD-MM-YYYY") : ""
-				}
-				onFocus={() => setCreationDatePickerVisible(true)} // Open date picker
-				style={styles.input}
-				mode="outlined"
-			/>
-			<DatePickerModal
-				locale="en"
-				mode="single"
-				visible={creationDatePickerVisible}
-				onDismiss={onDismissCreationDate}
-				date={creationDate ? new Date(creationDate) : new Date()}
-				onConfirm={onConfirmCreationDate}
-				animationType="fade"
-			/>
-
-			<TextInput
-				label="Expiry Date (Optional)"
-				value={expiryDate ? dayjs(expiryDate).format("DD-MM-YYYY") : ""}
-				onFocus={() => setExpiryDatePickerVisible(true)} // Open date picker
-				style={styles.input}
-				mode="outlined"
-			/>
-			<DatePickerModal
-				locale="en"
-				mode="single"
-				visible={expiryDatePickerVisible}
-				onDismiss={onDismissExpiryDate}
-				date={expiryDate ? new Date(expiryDate) : new Date()}
-				onConfirm={onConfirmExpiryDate}
-				animationType="fade"
-			/>
-
-			<TextInput
-				label="Low Stock Threshold (Optional)"
-				value={stockThreshold !== null ? stockThreshold.toString() : ""}
-				onChangeText={(text) => setStockThreshold(Number(text))}
-				keyboardType="numeric"
-				style={styles.input}
-				mode="outlined"
-			/>
-
-			<Button
-				mode="contained"
-				onPress={handleSubmit}
-				style={styles.submitButton}
-			>
-				Add Medicine
-			</Button>
+			<View>
+				<Button
+					mode="contained"
+					dark={theme.dark}
+					onPress={handleSubmit}
+					style={styles.submitButton}
+				>
+					{defaultValues ? "Update Medicine" : "Add Medicine"}
+				</Button>
+			</View>
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
 	container: {
-		padding: 16,
+		paddingBlockStart: 16,
+		flex: 1,
+		justifyContent: "space-between",
 	},
 	input: {
 		marginBottom: 12,

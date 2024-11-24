@@ -1,50 +1,73 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { useMedicineContext } from "@/context/MedicineContext";
-import { Medicine } from "@/types/medicine";
+// pages/updateMedicine.tsx
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
 import MedicineForm from "@/components/MedicineForm";
+import { Medicine } from "@/types/medicine";
+import { useMedicineContext } from "@/context/MedicineContext";
+import { useSearchParams } from "expo-router/build/hooks";
+import { useTheme, Text } from "react-native-paper";
 
-interface Props {
-	medicineToUpdate: Medicine; // Medicine to be updated, passed as a prop
-	onClose: () => void; // Close the modal or navigate back
-}
+export default function UpdateMedicine() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const id = searchParams.get("id");
+	const theme = useTheme();
 
-export default function UpdateMedicine({ medicineToUpdate, onClose }: Props) {
-	const { updateMedicine } = useMedicineContext();
+	const { medicines, updateMedicine } = useMedicineContext();
+	const [medicineToEdit, setMedicineToEdit] = useState<Medicine | null>(null);
 
-	const handleUpdate = (updatedFields: Partial<Medicine>) => {
-		// Merge existing medicine details with updated fields
-		const updatedMedicine = {
-			...medicineToUpdate,
-			...updatedFields,
-			amount: (updatedFields.amount ?? 0) + medicineToUpdate.amount, // Add restocked amount
-		};
+	useEffect(() => {
+		if (id) {
+			const foundMedicine = medicines.find(
+				(med) => med.id === Number(id)
+			);
+			setMedicineToEdit(foundMedicine || null);
+		}
+	}, [id, medicines]);
 
-		updateMedicine(updatedMedicine);
-		onClose();
+	const handleSubmit = (updatedFields: Partial<Medicine>) => {
+		if (medicineToEdit) {
+			updateMedicine({ ...medicineToEdit, ...updatedFields });
+			router.push("/"); // Redirect to the home page
+		}
 	};
 
 	return (
-		<View style={styles.container}>
-			<Text style={styles.title}>Restock Medicine</Text>
-			<MedicineForm
-				onSubmit={(updatedFields: Partial<Medicine>) => {
-					handleUpdate(updatedFields);
-				}}
-			/>
+		<View
+			style={[
+				styles.container,
+				{
+					backgroundColor: theme.colors.background,
+				},
+			]}
+		>
+			<Text
+				variant="headlineSmall"
+				style={[styles.header, { color: theme.colors.onBackground }]}
+			>
+				Update {medicineToEdit?.name}
+			</Text>
+			{medicineToEdit ? (
+				<MedicineForm
+					onSubmit={handleSubmit}
+					defaultValues={medicineToEdit}
+				/>
+			) : (
+				<Text>Loading...</Text>
+			)}
 		</View>
 	);
 }
 
 const styles = StyleSheet.create({
+	header: {
+		fontSize: 24,
+		fontWeight: "bold",
+		marginBottom: 16,
+	},
 	container: {
 		flex: 1,
 		padding: 16,
-		backgroundColor: "#fff",
-	},
-	title: {
-		fontSize: 20,
-		fontWeight: "bold",
-		marginBottom: 16,
 	},
 });

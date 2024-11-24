@@ -14,7 +14,7 @@ export default function MedicineList() {
 	const renderMedicineItem = ({ item }: { item: Medicine }) => (
 		<MedicineCard
 			medicineDetails={item}
-			onUpdate={() => router.push(`/updateMedicine?id=${item.id}`)}
+			onRestock={() => router.push(`/restockMedicine?id=${item.id}`)}
 			onPress={() => router.push(`/medicineDetail?id=${item.id}`)} // Correct query param
 		/>
 	);

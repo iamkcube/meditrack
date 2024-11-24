@@ -25,9 +25,10 @@ export default function Home() {
 
 			<Button
 				mode="contained"
-				dark
+				dark={theme.dark}
 				onPress={() => router.push("/addMedicine")}
 				style={styles.addButton}
+				buttonColor={theme.colors.primary}
 			>
 				Add Medicine
 			</Button>

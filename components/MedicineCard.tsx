@@ -1,4 +1,5 @@
 import { Medicine } from "@/types/medicine";
+import { expectedStockCalculator } from "@/utils/expectedStockCalculator";
 import { formatDateWithOrdinal } from "@/utils/formatDateWithOrdinal";
 import dayjs from "dayjs";
 import { router } from "expo-router";
@@ -7,30 +8,20 @@ import { Button, Card, useTheme, Text, Chip } from "react-native-paper";
 
 interface MedicineCardProps {
 	medicineDetails: Medicine;
-	onUpdate: () => void;
+	onRestock: () => void;
 	onPress: () => void;
 }
 
 const MedicineCard = ({
 	medicineDetails,
-	onUpdate,
+	onRestock,
 	onPress,
 }: MedicineCardProps) => {
-	const {
-		id,
-		name,
-		amount,
-		dosage,
-		creationDate,
-		expiryDate,
-		stockThreshold,
-	} = medicineDetails;
+	const { name, amount, dosage, creationDate, expiryDate, stockThreshold } =
+		medicineDetails;
 
 	const theme = useTheme();
-	const daysElapsed = creationDate
-		? dayjs().diff(dayjs(creationDate), "day")
-		: 0;
-	const expectedStock = amount - daysElapsed * dosage;
+	const expectedStock = expectedStockCalculator(creationDate, amount, dosage);
 	const isBelowThreshold =
 		stockThreshold != null && expectedStock <= stockThreshold;
 
@@ -43,15 +34,8 @@ const MedicineCard = ({
 				title={name}
 				titleStyle={{ fontSize: 20 }}
 			/>
-			<Card.Content>
-				<View
-					style={{
-						flexDirection: "row",
-						flexWrap: "wrap",
-						justifyContent: "flex-start",
-						marginBlockEnd: 4,
-					}}
-				>
+			<Card.Content style={styles.cardContent}>
+				<View style={styles.chip}>
 					<Chip
 						compact
 						elevated
@@ -79,9 +63,21 @@ const MedicineCard = ({
 				)}
 			</Card.Content>
 
-			<Card.Actions>
-				<Button onPress={onUpdate}>Update</Button>
-				<Button onPress={onPress}>View Details</Button>
+			<Card.Actions style={styles.cardAction}>
+				<Button
+					dark={theme.dark}
+					onPress={onRestock}
+					mode="outlined"
+					>
+					Restock
+				</Button>
+				{/* <Button
+					dark={theme.dark}
+					onPress={onPress}
+					mode="contained"
+				>
+					View Details
+				</Button> */}
 			</Card.Actions>
 		</Card>
 	);
@@ -91,6 +87,18 @@ const styles = StyleSheet.create({
 	card: {
 		marginBottom: 16,
 		padding: 4,
+	},
+	chip: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		justifyContent: "flex-start",
+		marginBlockEnd: 4,
+	},
+	cardContent: {
+		gap: 2,
+	},
+	cardAction: {
+		marginBlockStart: 4,
 	},
 });
 

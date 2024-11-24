@@ -17,7 +17,11 @@ const MedicineContext = createContext<MedicineContextProps | undefined>(
 );
 
 // MedicineContext Provider
-export const MedicineProvider = ({ children }: { children: React.ReactNode }) => {
+export const MedicineProvider = ({
+	children,
+}: {
+	children: React.ReactNode;
+}) => {
 	const [medicines, setMedicines] = useState<Medicine[]>([]);
 
 	// Load medicines from AsyncStorage when the app starts
@@ -29,7 +33,10 @@ export const MedicineProvider = ({ children }: { children: React.ReactNode }) =>
 					setMedicines(JSON.parse(storedMedicines));
 				}
 			} catch (error) {
-				console.error("Failed to load medicines from AsyncStorage", error);
+				console.error(
+					"Failed to load medicines from AsyncStorage",
+					error
+				);
 			}
 		};
 
@@ -40,9 +47,15 @@ export const MedicineProvider = ({ children }: { children: React.ReactNode }) =>
 	useEffect(() => {
 		const saveMedicines = async () => {
 			try {
-				await AsyncStorage.setItem("medicines", JSON.stringify(medicines));
+				await AsyncStorage.setItem(
+					"medicines",
+					JSON.stringify(medicines)
+				);
 			} catch (error) {
-				console.error("Failed to save medicines to AsyncStorage", error);
+				console.error(
+					"Failed to save medicines to AsyncStorage",
+					error
+				);
 			}
 		};
 
@@ -72,7 +85,10 @@ export const MedicineProvider = ({ children }: { children: React.ReactNode }) =>
 	};
 
 	// Function to send notifications
-	const sendNotification = async (medicineName: string, remainingStock: number) => {
+	const sendNotification = async (
+		medicineName: string,
+		remainingStock: number
+	) => {
 		await Notifications.scheduleNotificationAsync({
 			content: {
 				title: "Low Stock Alert",
@@ -84,8 +100,8 @@ export const MedicineProvider = ({ children }: { children: React.ReactNode }) =>
 
 	// Periodic stock check
 	useEffect(() => {
-		const interval = setInterval(checkStockLevels, 15 * 1000); // Check every day
-		
+		const interval = setInterval(checkStockLevels, 24 * 60 * 60 * 1000); // Check every day
+
 		return () => clearInterval(interval);
 	}, [medicines]);
 
@@ -123,7 +139,9 @@ export const MedicineProvider = ({ children }: { children: React.ReactNode }) =>
 export const useMedicineContext = (): MedicineContextProps => {
 	const context = useContext(MedicineContext);
 	if (!context) {
-		throw new Error("useMedicineContext must be used within a MedicineProvider");
+		throw new Error(
+			"useMedicineContext must be used within a MedicineProvider"
+		);
 	}
 	return context;
 };

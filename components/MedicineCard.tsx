@@ -1,20 +1,15 @@
 import { Medicine } from "@/types/medicine";
+import { formatDateWithOrdinal } from "@/utils/formatDateWithOrdinal";
 import dayjs from "dayjs";
-import { StyleSheet } from "react-native";
-import { Button, Card, useTheme } from "react-native-paper";
-import { Text } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Button, Card, useTheme, Text, Chip } from "react-native-paper";
 
 interface MedicineCardProps {
 	medicineDetails: Medicine;
 	onPress: () => void;
-	onDelete: () => void;
 }
 
-const MedicineCard = ({
-	medicineDetails,
-	onPress,
-	onDelete,
-}: MedicineCardProps) => {
+const MedicineCard = ({ medicineDetails, onPress }: MedicineCardProps) => {
 	const { name, amount, dosage, creationDate, expiryDate, stockThreshold } =
 		medicineDetails;
 
@@ -28,21 +23,40 @@ const MedicineCard = ({
 
 	return (
 		<Card
-			style={[
-				styles.card,
-				{
-					backgroundColor: theme.colors.secondaryContainer,
-					borderColor: theme.colors.outline,
-				},
-			]}
+			style={[styles.card]}
 			onPress={onPress}
 		>
 			<Card.Title
 				title={name}
-				subtitle={`Stock: ${expectedStock}`}
+				titleStyle={{ fontSize: 20 }}
 			/>
 			<Card.Content>
-				<Text style={{ color: theme.colors.onSurface }}>
+				<View
+					style={{
+						flexDirection: "row",
+						flexWrap: "wrap",
+						justifyContent: "flex-start",
+						marginBlockEnd: 4,
+					}}
+				>
+					<Chip
+						compact
+						elevated
+					>
+						{expectedStock} left
+					</Chip>
+				</View>
+
+				<Text
+					variant="bodyMedium"
+					style={{ color: theme.colors.onSurface }}
+				>
+					Created on: {formatDateWithOrdinal(creationDate)}
+				</Text>
+				<Text
+					variant="bodyMedium"
+					style={{ color: theme.colors.onSurface }}
+				>
 					Dosage: {dosage} per day
 				</Text>
 				{isBelowThreshold && (
@@ -54,14 +68,6 @@ const MedicineCard = ({
 
 			<Card.Actions>
 				<Button onPress={onPress}>View Details</Button>
-				<Button
-					onPress={onDelete}
-					mode="contained"
-					dark={theme.dark}
-					buttonColor="red"
-				>
-					Delete
-				</Button>
 			</Card.Actions>
 		</Card>
 	);

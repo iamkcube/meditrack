@@ -3,7 +3,7 @@ export interface Medicine {
 	name: string;
 	amount: number;
 	dosage: number; // Daily dosage amount
-	stockThreshold?: number; // Optional low-stock alert threshold
-	creationDate?: string; // Optional property for tracking the start date (ISO string)
+	creationDate: string; // Optional property for tracking the start date (ISO string)
 	expiryDate?: string; // Optional property for expiry tracking
+	stockThreshold?: number; // Optional low-stock alert threshold
 }

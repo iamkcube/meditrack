@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Medicine } from "@/types/medicine";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import dayjs from "dayjs";
 
 // Define the MedicineContext
 interface MedicineContextProps {
@@ -80,6 +81,33 @@ export const MedicineProvider = ({
 			prevMedicines.filter((medicine) => medicine.id !== id)
 		);
 	};
+
+	// Monitor stock levels and alert if below threshold
+	useEffect(() => {
+		const checkStockLevels = () => {
+			medicines.forEach((medicine) => {
+				if (
+					medicine.stockThreshold != null &&
+					medicine.dosage != null
+				) {
+					const daysElapsed = dayjs().diff(
+						dayjs(medicine.creationDate),
+						"day"
+					);
+					const expectedStock =
+						medicine.amount - daysElapsed * medicine.dosage;
+
+					if (expectedStock <= medicine.stockThreshold) {
+						alert(
+							`Stock for ${medicine.name} is below the threshold. Reorder soon!`
+						);
+					}
+				}
+			});
+		};
+
+		checkStockLevels();
+	}, [medicines]);
 
 	return (
 		<MedicineContext.Provider

@@ -15,7 +15,6 @@ export default function MedicineList() {
 		<MedicineCard
 			medicineDetails = {item}
 			onPress={() => router.push(`/medicineDetail?id=${item.id}`)} // Correct query param
-			onDelete={() => removeMedicine(item.id)} // Handle removal
 		/>
 	);
 

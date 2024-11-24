@@ -1,10 +1,7 @@
-import React, { useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
-import { Button, Text, useTheme } from "react-native-paper";
-import { useRouter } from "expo-router";
-import { Medicine } from "../types/medicine";
-import { useMedicineContext } from "@/context/MedicineContext";
 import MedicineList from "@/app/medicineList";
+import { useRouter } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { Button, Text, useTheme } from "react-native-paper";
 
 export default function Home() {
 	const router = useRouter();
@@ -19,7 +16,7 @@ export default function Home() {
 		>
 			<Text
 				variant="headlineSmall"
-				style={[styles.header, { color: theme.colors.secondary }]}
+				style={[styles.header, { color: theme.colors.onBackground }]}
 			>
 				Medicine Inventory
 			</Text>
@@ -44,6 +41,8 @@ const styles = StyleSheet.create({
 		padding: 16,
 	},
 	header: {
+		fontSize: 24,
+		fontWeight: "bold",
 		marginBottom: 16,
 	},
 	medicineCard: {

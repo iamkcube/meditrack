@@ -31,7 +31,7 @@ export default function MedicineForm({ onSubmit }: Props) {
 		}
 
 		const newMedicine: Medicine = {
-			id: Date.now(), // Unique ID
+			id: Date.now(), 
 			name,
 			amount,
 			dosage,

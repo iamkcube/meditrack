@@ -12,7 +12,7 @@ export default function AddMedicine() {
 
 	const handleAddMedicine = (newMedicine: Medicine) => {
 		addMedicine(newMedicine);
-		router.push("/"); // Navigate back to the home screen
+		router.push("/"); 
 	};
 
 	return (

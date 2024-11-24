@@ -73,7 +73,7 @@ export default function MedicineDetail() {
 				>
 					Medicine Details Not Found
 				</Text>
-				<Button onPress={() => router.back()}>Go Back</Button>
+				<Button onPress={() => router.push("/")}>Go Home</Button>
 			</View>
 		);
 	}
@@ -150,7 +150,6 @@ export default function MedicineDetail() {
 			<View style={styles.buttonContainer}>
 				<Button
 					style={styles.button}
-					dark={theme.dark}
 					mode="contained"
 					onPress={onUpdate}
 				>
@@ -160,7 +159,7 @@ export default function MedicineDetail() {
 					style={styles.button}
 					onPress={onDelete}
 					mode="contained"
-					dark={theme.dark}
+					textColor={theme.colors.onErrorContainer}
 					buttonColor={theme.colors.errorContainer}
 				>
 					Delete

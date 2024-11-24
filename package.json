@@ -66,5 +66,11 @@
     "eslint": "^8.57.0",
     "eslint-config-expo": "~8.0.1"
   },
-  "private": true
+  "private": true,
+  "eslintConfig": {
+    "extends": [
+      "expo",
+      "eslint:recommended"
+    ]
+  }
 }

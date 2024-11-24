@@ -65,14 +65,12 @@ const MedicineCard = ({
 
 			<Card.Actions style={styles.cardAction}>
 				<Button
-					dark={theme.dark}
 					onPress={onRestock}
 					mode="outlined"
-					>
+				>
 					Restock
 				</Button>
 				{/* <Button
-					dark={theme.dark}
 					onPress={onPress}
 					mode="contained"
 				>

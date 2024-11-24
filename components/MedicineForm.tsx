@@ -178,7 +178,6 @@ export default function MedicineForm({ onSubmit, defaultValues }: Props) {
 			<View>
 				<Button
 					mode="contained"
-					dark={theme.dark}
 					onPress={handleSubmit}
 					style={styles.submitButton}
 				>

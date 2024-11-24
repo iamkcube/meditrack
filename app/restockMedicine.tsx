@@ -78,7 +78,6 @@ export default function RestockMedicine() {
 					</HelperText>
 					<Button
 						mode="contained"
-						dark={theme.dark}
 						onPress={handleRestock}
 						style={styles.button}
 					>

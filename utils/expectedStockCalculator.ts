@@ -1,13 +1,10 @@
+import { Medicine } from "@/types/medicine";
 import dayjs from "dayjs";
 
-export function expectedStockCalculator(
-	creationDate: string,
-	amount: number,
-	dosage: number
-) {
-	const daysElapsed = creationDate
-		? dayjs().diff(dayjs(creationDate), "day")
+export function expectedStockCalculator(medicine: Medicine) {
+	const daysElapsed = medicine.creationDate
+		? dayjs().diff(dayjs(medicine.creationDate), "day")
 		: 0;
-	const expectedStock = amount - daysElapsed * dosage;
+	const expectedStock = medicine.amount - daysElapsed * medicine.dosage;
 	return expectedStock;
 }

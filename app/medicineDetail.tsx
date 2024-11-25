@@ -6,14 +6,7 @@ import dayjs from "dayjs";
 import { useRouter } from "expo-router";
 import { useSearchParams } from "expo-router/build/hooks";
 import { StyleSheet, View } from "react-native";
-import
-	{
-		Button,
-		Chip,
-		Divider,
-		Text,
-		useTheme
-	} from "react-native-paper";
+import { Button, Chip, Divider, Text, useTheme } from "react-native-paper";
 
 export default function MedicineDetail() {
 	const router = useRouter();
@@ -106,12 +99,7 @@ export default function MedicineDetail() {
 						compact
 						elevated
 					>
-						{expectedStockCalculator(
-							medicine.creationDate,
-							medicine.amount,
-							medicine.dosage
-						)}{" "}
-						left
+						{expectedStockCalculator(medicine)} left
 					</Chip>
 				</View>
 				<Divider bold />

@@ -19,7 +19,7 @@ const MedicineCard = ({
 		medicineDetails;
 
 	const theme = useTheme();
-	const expectedStock = expectedStockCalculator(creationDate, amount, dosage);
+	const expectedStock = expectedStockCalculator(medicineDetails);
 	const isBelowThreshold =
 		stockThreshold != null && expectedStock <= stockThreshold;
 

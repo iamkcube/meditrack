@@ -1,22 +1,19 @@
 import { Medicine } from "@/types/medicine";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import dayjs from "dayjs";
-import * as Notifications from "expo-notifications";
-import * as BackgroundFetch from "expo-background-fetch";
-import * as TaskManager from "expo-task-manager";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { expectedStockCalculator } from "@/utils/expectedStockCalculator";
-
-const STOCK_CHECK_TASK = "STOCK_CHECK_TASK";
+import { StorageService } from "@/services/storage";
+import * as TaskManager from "expo-task-manager";
+import * as BackgroundFetch from "expo-background-fetch";
+import {
+	STOCK_CHECK_TASK,
+	NotificationService,
+} from "@/services/notificationHandler";
+import { StockCalculatorService } from "@/services/checkStock";
 
 // Define the task
 TaskManager.defineTask(STOCK_CHECK_TASK, async () => {
 	try {
-		const storedMedicines = await AsyncStorage.getItem("medicines");
-		if (storedMedicines) {
-			const medicines = JSON.parse(storedMedicines);
-			await checkStockLevels(medicines);
-		}
+		const medicines = await StorageService.loadMedicines();
+		await StockCalculatorService.checkStockLevels(medicines);
 		return BackgroundFetch.BackgroundFetchResult.NewData;
 	} catch (error) {
 		console.error("Background task failed:", error);
@@ -35,51 +32,6 @@ const MedicineContext = createContext<MedicineContextProps | undefined>(
 	undefined
 );
 
-// Function to check stock and send notifications
-const checkStockLevels = async (medicines: Medicine[]) => {
-	for (const medicine of medicines) {
-		const remainingStock = expectedStockCalculator(medicine);
-
-		if (
-			medicine.stockThreshold !== undefined &&
-			remainingStock <= medicine.stockThreshold
-		) {
-			await sendNotification(medicine.name, remainingStock);
-		}
-	}
-};
-
-// Function to send notifications
-const sendNotification = async (
-	medicineName: string,
-	remainingStock: number
-) => {
-	const notificationId = `stock-${medicineName}-${Date.now()}`;
-
-	await Notifications.scheduleNotificationAsync({
-		content: {
-			title: "Low Stock Alert",
-			body: `${medicineName} is running low! Remaining stock: ${remainingStock}`,
-			data: { medicineName, remainingStock },
-		},
-		identifier: notificationId,
-		trigger: null,
-	});
-};
-
-// Setup background task
-const setupBackgroundTask = async () => {
-	try {
-		await BackgroundFetch.registerTaskAsync(STOCK_CHECK_TASK, {
-			minimumInterval: 60 * 60, // 1 hour in seconds
-			stopOnTerminate: false, // Task continues after app is closed
-			startOnBoot: true, // Task starts when device restarts
-		});
-	} catch (err) {
-		console.error("Task Registration failed:", err);
-	}
-};
-
 export const MedicineProvider = ({
 	children,
 }: {
@@ -87,85 +39,58 @@ export const MedicineProvider = ({
 }) => {
 	const [medicines, setMedicines] = useState<Medicine[]>([]);
 
-	// Initialize notifications and background task
+	// Initialize services
 	useEffect(() => {
 		const initialize = async () => {
-			// Request notification permissions
-			const { status } = await Notifications.requestPermissionsAsync();
-			if (status !== "granted") {
-				console.warn("Notification permissions not granted");
-			}
-
-			// Configure notifications
-			await Notifications.setNotificationChannelAsync("stock-alerts", {
-				name: "Stock Alerts",
-				importance: Notifications.AndroidImportance.HIGH,
-				vibrationPattern: [0, 250, 250, 250],
-			});
-
-			// Setup background task
-			await setupBackgroundTask();
+			await NotificationService.initialize();
+			await NotificationService.setupBackgroundTask();
 		};
 
 		initialize();
 	}, []);
 
-	// Load medicines from AsyncStorage when the app starts
+	// Load medicines
 	useEffect(() => {
 		const loadMedicines = async () => {
 			try {
-				const storedMedicines = await AsyncStorage.getItem("medicines");
-				if (storedMedicines) {
-					setMedicines(JSON.parse(storedMedicines));
-				}
+				const loadedMedicines = await StorageService.loadMedicines();
+				setMedicines(loadedMedicines);
 			} catch (error) {
-				console.error(
-					"Failed to load medicines from AsyncStorage",
-					error
-				);
+				console.error("Failed to load medicines", error);
 			}
 		};
 
 		loadMedicines();
 	}, []);
 
-	// Save medicines to AsyncStorage whenever the list changes
+	// Save medicines and check stock
 	useEffect(() => {
-		const saveMedicines = async () => {
+		const updateMedicines = async () => {
 			try {
-				await AsyncStorage.setItem(
-					"medicines",
-					JSON.stringify(medicines)
-				);
-				// Trigger an immediate stock check when medicines change
-				await checkStockLevels(medicines);
+				await StorageService.saveMedicines(medicines);
+				await StockCalculatorService.checkStockLevels(medicines);
 			} catch (error) {
-				console.error(
-					"Failed to save medicines to AsyncStorage",
-					error
-				);
+				console.error("Failed to update medicines", error);
 			}
 		};
 
-		saveMedicines();
+		updateMedicines();
 	}, [medicines]);
 
 	const addMedicine = (medicine: Medicine) => {
-		setMedicines((prevMedicines) => [...prevMedicines, medicine]);
+		setMedicines((prev) => [...prev, medicine]);
 	};
 
 	const updateMedicine = (updatedMedicine: Medicine) => {
-		setMedicines((prevMedicines) =>
-			prevMedicines.map((medicine) =>
+		setMedicines((prev) =>
+			prev.map((medicine) =>
 				medicine.id === updatedMedicine.id ? updatedMedicine : medicine
 			)
 		);
 	};
 
 	const removeMedicine = (id: number) => {
-		setMedicines((prevMedicines) =>
-			prevMedicines.filter((medicine) => medicine.id !== id)
-		);
+		setMedicines((prev) => prev.filter((medicine) => medicine.id !== id));
 	};
 
 	return (

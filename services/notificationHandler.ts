@@ -35,10 +35,12 @@ export class NotificationService {
 	static async sendStockAlert(medicineName: string, remainingStock: number) {
 		const notificationId = `stock-${medicineName}-${Date.now()}`;
 
+		console.log("Notification Sent");
+
 		await Notifications.scheduleNotificationAsync({
 			content: {
 				title: "Low Stock Alert",
-				body: `${medicineName} is running low! Remaining stock: ${remainingStock}`,
+				body: `${medicineName} is running low! ${remainingStock} left`,
 				data: { medicineName, remainingStock },
 			},
 			identifier: notificationId,

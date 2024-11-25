@@ -1,4 +1,4 @@
-import { NotificationService } from "@/services/Notifications";
+import { NotificationService } from "@/services/notificationHandler";
 import { Medicine } from "@/types/medicine";
 import { expectedStockCalculator } from "@/utils/expectedStockCalculator";
 

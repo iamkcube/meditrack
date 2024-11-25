@@ -16,7 +16,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.MedicineCounterApp"
+      "package": "com.kalinga.MedicineCounterApp"
     },
     "web": {
       "bundler": "metro",
@@ -54,6 +54,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e9f897fa-2521-4144-83d2-36aa02dba648"
+      }
     }
   }
 }

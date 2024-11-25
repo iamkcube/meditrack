@@ -1,50 +1,39 @@
-# Welcome to your Expo app 👋
+# MediTrack - Medicine Tracker App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+MediTrack is a mobile app designed to help you track your medicine consumption, monitor stock levels, and never miss a dose. With features like automatic tracking, reminders, and low stock alerts, MediTrack ensures you stay on top of your health needs.
 
-## Get started
+## Features:
 
-1. Install dependencies
+-   **Track Medicine Consumption**: Log and monitor your daily medicine intake.
+-   **Set Medication Schedules**: Receive notifications and reminders for scheduled doses.
+-   **Low Stock Alerts**: Get notified when stock levels are low or when it’s time to reorder.
+-   **Expiry Tracking**: Keep track of the expiry dates of your medicines.
+-   **Emergency Contacts**: Set emergency contacts for medical assistance.
 
-   ```bash
-   npm install
-   ```
+## Installation:
 
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Clone the repository and install the necessary dependencies:
 
 ```bash
-npm run reset-project
+git clone https://github.com/iamkcube/meditrack.git
+cd meditrack
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Development:
 
-## Learn more
+1. Set up your environment with Expo CLI.
+2. Run the app locally:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+3. You can also build the app for iOS or Android using the Expo CLI.
 
-## Join the community
+## Contributions:
 
-Join our community of developers creating universal apps.
+Feel free to fork the project, open issues, and contribute to the development of MediTrack. Pull requests are welcome!
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## License:
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
